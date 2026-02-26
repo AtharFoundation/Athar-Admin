@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة بيانات أثر | Athar Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #a29bfe; /* بنفسجي فاتح للزجاج */
+            --accent: #6c5ce7;  /* بنفسجي غامق */
+            --bg-gradient: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --whatsapp-green: #25D366;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: #e0e0e0;
+            padding: 15px;
+            min-height: 100vh;
+        }
+
+        /* تحسين رأس الصفحة */
+        .header-section {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+        }
+
+        .header-section h1 {
+            color: #fff;
+            font-size: 1.8rem;
+            text-shadow: 0 0 20px rgba(108, 92, 231, 0.5);
+            margin-bottom: 5px;
+        }
+
+        .header-section p {
+            opacity: 0.8;
+            font-weight: 300;
+            font-size: 0.9rem;
+        }
+
+        /* صندوق البحث الزجاجي */
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 25px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            color: white;
+            outline: none;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            font-family: 'Cairo';
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .search-box:focus {
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: 0 0 15px rgba(108, 92, 231, 0.3);
+        }
+
+        /* حاوية الجدول الزجاجية */
+        .table-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            overflow-x: auto; /* ضروري للهواتف */
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            position: relative;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1800px; /* لضمان عدم تكدس البيانات */
+        }
+
+        th {
+            background: rgba(108, 92, 231, 0.2);
+            padding: 18px 15px;
+            text-align: right;
+            font-size: 0.85rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.85rem;
+            white-space: nowrap; /* يمنع التفاف النص للحفاظ على شكل الجدول */
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        /* الأزرار والبادجات */
+        .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            background: var(--whatsapp-green);
+            color: white;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            transition: 0.3s;
+        }
+
+        .whatsapp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+        }
+
+        .badge {
+            background: linear-gradient(45deg, var(--accent), #8e44ad);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        /* حالة التحميل */
+        .loading-overlay {
+            text-align: center;
+            padding: 50px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        /* تخصيص شريط التمرير (Scrollbar) ليناسب التصميم */
+        .table-container::-webkit-scrollbar {
+            height: 6px;
+        }
+        .table-container::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+        }
+        .table-container::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 10px;
+        }
+
+        /* لمسات للهواتف */
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .header-section h1 { font-size: 1.4rem; }
+            .table-container { border-radius: 15px; }
+            td, th { padding: 12px 10px; font-size: 0.8rem; }
+            .search-box { font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-section">
+        <h1>سجل متطوعي "أثــر"</h1>
+        <p>لوحة التحكم السحابية - نظام إدارة البيانات</p>
+    </div>
+    
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-box" placeholder="ابحث بالاسم، التخصص، أو المحافظة..." onkeyup="filterTable()">
+    </div>
+
+    <div class="table-container">
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>تواصل</th> 
+                    <th>الاسم</th>
+                    <th>العمر</th>
+                    <th>الاختصاص</th>
+                    <th>المحافظة</th>
+                    <th>واتساب</th>
+                    <th>الإيميل</th>
+                    <th>اللغات</th>
+                    <th>المواهب</th>
+                    <th>الشهادات</th>
+                    <th>القسم</th>
+                    <th>سبب الانضمام</th>
+                    <th>تجربة سابقة</th>
+                    <th>الالتزام</th>
+                    <th>ساعات إضافية</th>
+                    <th>نقاط القوة والضعف</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                </tbody>
+        </table>
+        <div id="loader" class="loading-overlay">
+            <div style="margin-bottom: 10px;">جاري جلب البيانات من السحابة...</div>
+        </div>
+    </div>
+
+    <script>
+        // ملاحظة: لم يتم لمس منطق الجافا سكريبت كما طلبت لضمان استقرار الربط
+        const API_URL = "https://sheetdb.io/api/v1/bi0e9hh6qk36x";
+
+        async function loadData() {
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                document.getElementById('loader').style.display = 'none';
+                renderTable(data);
+            } catch (error) {
+                document.getElementById('loader').innerHTML = "⚠️ فشل في الاتصال بقاعدة البيانات.";
+            }
+        }
+
+        function renderTable(data) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = "";
+
+            data.reverse().forEach(item => {
+                const row = document.createElement('tr');
+                const cleanPhone = item.whatsapp ? item.whatsapp.replace(/\D/g, '') : '';
+                
+                row.innerHTML = `
+                    <td>
+                        <a href="https://wa.me/${cleanPhone}" target="_blank" class="whatsapp-btn">
+                            واتساب 
+                        </a>
+                    </td>
+                    <td><b style="color:#fff">${item.name || '-'}</b></td>
+                    <td>${item.age || '-'}</td>
+                    <td>${item.major || '-'}</td>
+                    <td>${item.city || '-'}</td>
+                    <td style="opacity: 0.7; font-family: monospace;">${item.whatsapp || '-'}</td>
+                    <td>${item.email || '-'}</td>
+                    <td>${item.languages || '-'}</td>
+                    <td>${item.experience || '-'}</td>
+                    <td>${item.certificates || '-'}</td>
+                    <td><span class="badge">${item.department || '-'}</span></td>
+                    <td>${item.why_join || '-'}</td>
+                    <td>${item.volunteer_exp || '-'}</td>
+                    <td>${item.commitment || '-'}</td>
+                    <td>${item.extra_hours || '-'}</td>
+                    <td>${item.strengths_weaknesses || '-'}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function filterTable() {
+            const query = document.getElementById("searchInput").value.toLowerCase();
+            const rows = document.querySelectorAll("#tableBody tr");
+            rows.forEach(row => {
+                row.style.display = row.innerText.toLowerCase().includes(query) ? "" : "none";
+            });
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
