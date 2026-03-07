@@ -206,11 +206,10 @@
                     <th>الالتزام</th>
                     <th>ساعات إضافية</th>
                     <th>نقاط القوة والضعف</th>
-                    <th>  PSS الدعم النفسي</th>
-                    <th>معايير تحديد الدعم النفسي  </th>
-                    <th>عدد سنوات الخبرة </th>
-                    <th>رابط Github Repos او رابط Portfolio او معرض الأعمال</th>
-
+                    <th>الدعم النفسي</th>
+                    <th>معايير النفسي</th>
+                    <th>التقني - خبرة</th>
+                    <th>التقني - رابط</th>
                 </tr>
             </thead>
             <tbody id="tableBody">
@@ -265,10 +264,10 @@
                     <td>${item.commitment || '-'}</td>
                     <td>${item.extra_hours || '-'}</td>
                     <td>${item.strengths_weaknesses || '-'}</td>
-                    <td>${pss_experience || '-'}</td>
-                    <td>${pss_criteria || '-'}</td>
-                    <td>${experience_years || '-'}</td>
-                    <td>${portfolio_link || '-'}</td>
+                    <td>${item.pss_experience || '-'}</td>
+                    <td>${item.pss_criteria || '-'}</td>
+                    <td>${item.experience_years || '-'}</td>
+                    <td>${item.portfolio_link || '-'}</td>
                 `;
                 tbody.appendChild(row);
             });
